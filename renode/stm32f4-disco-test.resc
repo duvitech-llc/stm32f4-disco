@@ -1,0 +1,29 @@
+:name: STM32F4 Discovery test script
+:description: Headless script for running the local STM32F4 Discovery firmware in tests.
+
+using sysbus
+$name?="STM32F4_Discovery"
+mach create $name
+machine LoadPlatformDescription $ORIGIN/stm32f4_disco.repl
+
+cpu PerformanceInMips 125
+
+$bin?=$ORIGIN/../build/Debug/stm32f4-disco.elf
+
+python "import _random"
+python "rand = _random.Random()"
+
+$id1 = `python "print rand.getrandbits(32)"`
+$id2 = `python "print rand.getrandbits(32)"`
+$id3 = `python "print rand.getrandbits(32)"`
+
+macro reset
+"""
+    sysbus LoadELF $bin
+
+    sysbus WriteDoubleWord 0x1FFF7A10 $id1
+    sysbus WriteDoubleWord 0x1FFF7A14 $id2
+    sysbus WriteDoubleWord 0x1FFF7A18 $id3
+"""
+
+runMacro $reset

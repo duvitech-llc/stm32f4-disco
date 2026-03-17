@@ -1,14 +1,14 @@
 :name: STM32F4 Discovery
-:description: This script runs Contiki on STM32F4 Discovery.
+:description: This script runs the local STM32F4 Discovery firmware.
 
 using sysbus
 $name?="STM32F4_Discovery"
 mach create $name
-machine LoadPlatformDescription @stm32f4_disco.repl
+machine LoadPlatformDescription $ORIGIN/stm32f4_disco.repl
 
 cpu PerformanceInMips 125
 
-$bin?=@../Debug/stm32f4-disco.elf
+$bin?=$ORIGIN/../build/Debug/stm32f4-disco.elf
 
 showAnalyzer sysbus.usart2
 
